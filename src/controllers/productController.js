@@ -1,20 +1,20 @@
-const products = [];
+const productService = require("../services/productService");
 
 const createProduct = (req, res) => {
   const { name, stock } = req.body;
 
-  const product = {
-    id: products.length + 1,
+  const product = productService.createProduct(
     name,
-    stock,
-  };
-
-  products.push(product);
+    stock
+  );
 
   res.status(201).json(product);
 };
 
 const getProducts = (req, res) => {
+  const products =
+    productService.getProducts();
+
   res.json({
     data: products,
   });
