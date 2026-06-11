@@ -1,19 +1,24 @@
-const products = [];
+const pool = require("../config/database");
 
-const createProduct = (name, stock) => {
-  const product = {
-    id: products.length + 1,
-    name,
-    stock,
-  };
+const createProduct = async (name, stock) => {
+  const result = await pool.query(
+    `INSERT INTO products (name, stock)
+     VALUES ($1, $2)
+     RETURNING id, name, stock, created_at`,
+    [name, stock]
+  );
 
-  products.push(product);
-
-  return product;
+  return result.rows[0];
 };
 
-const getProducts = () => {
-  return products;
+const getProducts = async () => {
+  const result = await pool.query(
+    `SELECT id, name, stock, created_at
+     FROM products
+     ORDER BY id ASC`
+  );
+
+  return result.rows;
 };
 
 module.exports = {
